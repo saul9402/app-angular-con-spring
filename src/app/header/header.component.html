@@ -6,8 +6,16 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <!-- Asi se indica la navegación entre las diferentes ligas que tiene el proyecto -->
+        <!-- Con active indicas que si está seleccionada esa pagina se verá el boton que corresponde diferentes "resaltado" -->
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/directivas">DIRECTIVAS</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/clientes">CLIENTES</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Link</a>

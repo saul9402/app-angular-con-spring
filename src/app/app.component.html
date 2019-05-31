@@ -1,11 +1,7 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <app-header> </app-header>
-<div class="container">
-
-
-  <h1>
-    {{ title }}!
-  </h1>
-  <app-clientes></app-clientes>
+  <div class="container">
+    <!--  Con esta directiva indicas que se va a renderizar el contenido que este en la variable routes-->
+    <router-outlet></router-outlet>
   </div>
-  <app-footer></app-footer>
+<app-footer></app-footer>
