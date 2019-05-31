@@ -8,6 +8,6 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Bienvenido Angular';
   curso:string = 'Curso Spring con Angular 7';
-  profesor:string = 'Andrés Gúzman';
+  profesor:string = 'Andrés Guzmán';
 
 }
