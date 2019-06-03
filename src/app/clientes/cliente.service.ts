@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import {CLIENTES} from './clientes.json';
+import { formatDate, DatePipe} from '@angular/common'
+
+//import {CLIENTES} from './clientes.json';
 import {Cliente} from './cliente';
 import swal  from 'sweetalert2';
 import { Router } from '@angular/router';
@@ -33,14 +35,27 @@ export class ClienteService {
     /*Esto se hace para realizar un cast ya que por
      defecto el metodo .get devuelve un objeto de
       tipo any y necesitamos un arreglo de clientes*/
-      return this.http.get<Cliente[]>(this.urlEndPoint);
+      // return this.http.get<Cliente[]>(this.urlEndPoint);
 
     /*
     esto es una segunda forma, funciona igual solo que con otra sintaxis
     */
-  /*  return this.http.get(this.urlEndPoint).pipe(
-      map(response => response as Cliente[])
-    );*/
+  return this.http.get(this.urlEndPoint).pipe(
+      map(response => {
+        let clientes = response as Cliente[];
+        return clientes.map(cliente => {
+          cliente.nombre = cliente.nombre.toUpperCase();
+          let datePipe = new DatePipe('es');
+          // cliente.createAt = formatDate(cliente.createAt, 'dd-MM-yyyy', 'en-US');
+          //con 3 E se muestra el nombre del dia abreviado, con 4 Ese muestra completo
+          //3 M es el nombre del mes abreviado, con 4 M es el nombre del mes completo
+          //cliente.createAt = datePipe.transform(cliente.createAt, 'fullDate'); //revisar documentacion
+          //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy'); //sto se deja como pipe en el html
+          return cliente;
+        }
+        )
+      })
+    );
   }
 
   create(cliente: Cliente) : Observable<any>{

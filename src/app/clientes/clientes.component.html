@@ -24,9 +24,9 @@
         <tr *ngFor="let cliente of clientes">
           <td>{{cliente.id}}</td>
           <td>{{cliente.nombre}}</td>
-          <td>{{cliente.apellido}}</td>
+          <td>{{cliente.apellido | uppercase}} </td>
           <td>{{cliente.email}}</td>
-          <td>{{cliente.createAt}}</td>
+          <td>{{cliente.createAt | date:'fullDate'}}</td>
           <td>
               <!-- Para recibir parametros por medio de la url se pone la url que los recibirá
             dentro de el arreglo de routerLink (previamente esta url deberá estar mapeada en el app.module
