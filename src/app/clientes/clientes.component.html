@@ -1,7 +1,10 @@
-<div class="card border-primary mb-3">
+ <div class="card border-primary mb-3">
   <div class="card-header">Clientes</div>
   <div class="card-body text-primary">
     <h5 class="card-title">Listado de clientes</h5>
+    <div class="my-2 text-left">
+      <button type="button" class="btn btn-rounded btn-primary" [routerLink] = "['/clientes/form']">Crear cliente</button>
+    </div>
     <table class="table table-bordered table-stripped">
       <thead>
         <tr>
@@ -10,6 +13,8 @@
           <th>APELLIDO</th>
           <th>EMAIL</th>
           <th>FECHA</th>
+          <th>EDITAR</th>
+          <th>ELIMINAR</th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +24,15 @@
           <td>{{cliente.apellido}}</td>
           <td>{{cliente.email}}</td>
           <td>{{cliente.createAt}}</td>
+          <td>
+              <!-- Para recibir parametros por medio de la url se pone la url que los recibirá
+            dentro de el arreglo de routerLink (previamente esta url deberá estar mapeada en el app.module
+            e indicar que va a recibir un parametro) y con una coma se separan las variables -->
+            <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]" class="btn btn-primary btn-sm">editar</button>
+          </td>
+          <td>
+            <button type="button" name="eliminar" (click) = delete(cliente) class="btn btn-danger btn-sm">eliminar</button>
+          </td>
         </tr>
       </tbody>
     </table>
