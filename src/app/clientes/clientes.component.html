@@ -5,7 +5,10 @@
     <div class="my-2 text-left">
       <button type="button" class="btn btn-rounded btn-primary" [routerLink] = "['/clientes/form']">Crear cliente</button>
     </div>
-    <table class="table table-bordered table-stripped">
+    <div class="alert alert-info" *ngIf="clientes?.length == 0">
+      ¡No hay registros en la base de datos!
+    </div>
+    <table class="table table-bordered table-stripped" *ngIf="clientes?.length > 0">
       <thead>
         <tr>
           <th>ID</th>
