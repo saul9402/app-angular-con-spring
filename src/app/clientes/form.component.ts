@@ -35,9 +35,9 @@ export class FormComponent implements OnInit {
     console.log(this.cliente);
     this.clienteService.create(this.cliente).subscribe(
       //es como un redirect en thymeleaf, :D
-      cliente  => {
+      response  => {
         this.router.navigate(['/clientes'])
-        swal.fire('Cliente Creado!', `Cliente ${cliente.nombre} creado con éxito`, 'success')
+        swal.fire('Cliente Creado!', `${response.mensaje}: ${response.cliente.nombre}`, 'success')
       }
     )
   }
@@ -45,9 +45,9 @@ export class FormComponent implements OnInit {
   public update(): void{
     this.clienteService.update(this.cliente)
     .subscribe(
-      cliente => {
+      response => {
         this.router.navigate(['/clientes'])
-        swal.fire('Cliente Actualizado!', `Cliente ${cliente.nombre} actualizado con éxito`, 'success')
+        swal.fire('Cliente Actualizado!', `${response.mensaje}: ${response.cliente.nombre}`, 'success');
       }
     )
   }
