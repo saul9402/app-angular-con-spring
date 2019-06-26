@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import swal from 'sweetalert2';
@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-clientes',
   templateUrl: './clientes.component.html'
 })
-export class ClientesComponent implements OnInit {
+export class ClientesComponent implements OnInit{
 
   clientes: Cliente[];
   paginador: any;
