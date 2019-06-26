@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { formatDate, DatePipe} from '@angular/common'
+import { formatDate, DatePipe } from '@angular/common'
 
 //import {CLIENTES} from './clientes.json';
-import {Cliente} from './cliente';
-import swal  from 'sweetalert2';
+import { Cliente } from './cliente';
+import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 /*import {Observable} from 'rxjs/Observable' esto es para angular 5*/
 /*import { of } from 'rxjs/observable/of' esto es para la version 5*/
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 /*El Observable sirve para realizar las peticiones asincronas y poder usar Reactive*/
 import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 
 
 
@@ -21,12 +21,12 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class ClienteService {
 
-  private urlEndPoint:string = 'http://localhost:8080/api/clientes';
-  private httpHeaders = new HttpHeaders({'Content-Type': "application/json"})
+  private urlEndPoint: string = 'http://localhost:8080/api/clientes';
+  private httpHeaders = new HttpHeaders({ 'Content-Type': "application/json" })
 
-  constructor(private http:HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  getClientes():Observable<Cliente[]>{
+  getClientes(): Observable<Cliente[]> {
     /*Con of() se convierte el listado de
      clientes en un flujo observable apartir
      de la lista de clientes*/
@@ -35,12 +35,19 @@ export class ClienteService {
     /*Esto se hace para realizar un cast ya que por
      defecto el metodo .get devuelve un objeto de
       tipo any y necesitamos un arreglo de clientes*/
-      // return this.http.get<Cliente[]>(this.urlEndPoint);
+    // return this.http.get<Cliente[]>(this.urlEndPoint);
 
     /*
     esto es una segunda forma, funciona igual solo que con otra sintaxis
     */
-  return this.http.get(this.urlEndPoint).pipe(
+    return this.http.get(this.urlEndPoint).pipe(
+      //tap no cambia los datos sólo permite manipularlos
+      tap(response => {
+        let clientes = response as Cliente[];
+        clientes.forEach(cliente => {
+          console.log(cliente.nombre);
+        });
+      }),
       map(response => {
         let clientes = response as Cliente[];
         return clientes.map(cliente => {
@@ -50,25 +57,32 @@ export class ClienteService {
           //con 3 E se muestra el nombre del dia abreviado, con 4 Ese muestra completo
           //3 M es el nombre del mes abreviado, con 4 M es el nombre del mes completo
           //cliente.createAt = datePipe.transform(cliente.createAt, 'fullDate'); //revisar documentacion
-          //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy'); //sto se deja como pipe en el html
+          //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy'); //esto se deja como pipe en el html
           return cliente;
         }
         )
+      }),
+      //el orden en que ejecutes estas funciones es importante puesto 
+      //que arriba debes convertir a clientes y aqui ya no porque el map ya lo hizo
+      tap(clientes => {
+        clientes.forEach(cliente => {
+          console.log(cliente.nombre);
+        });
       })
     );
   }
 
-  create(cliente: Cliente) : Observable<any>{
+  create(cliente: Cliente): Observable<any> {
     /*
     se envia una peticion post para crear a cliente,
      como parametros van la URL, el objeto que contiene los declarations
      y los headers que acepta el endpoint. Finalmente como se están utilizando observables
      (programación reactiva se pone el tipo de objeto que va a devolver ese endpoint)
     */
-    return this.http.post<any>(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.post<any>(this.urlEndPoint, cliente, { headers: this.httpHeaders }).pipe(
       catchError(e => {
 
-        if(e.status == 400){
+        if (e.status == 400) {
           return throwError(e);
         }
 
@@ -79,12 +93,12 @@ export class ClienteService {
     );
   }
 
-  createMap(cliente: Cliente) : Observable<Cliente>{
+  createMap(cliente: Cliente): Observable<Cliente> {
     /*
   Una segunda forma de transformar lo que viene en el map si es requerido devolverun tipo especifico de dato
   como cliente
     */
-    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.post<Cliente>(this.urlEndPoint, cliente, { headers: this.httpHeaders }).pipe(
       map((response: any) => response.cliente as Cliente),
       catchError(e => {
         console.log(e.error.mensaje);
@@ -94,7 +108,7 @@ export class ClienteService {
     );
   }
 
-  getCliente(id): Observable<Cliente>{
+  getCliente(id): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       /*catchError permite analizar el flujo de informacion en
        busca de errores si se llega a dar alguno lo manda a la variable e
@@ -108,13 +122,13 @@ export class ClienteService {
     )
   }
 
-  update(cliente:Cliente):Observable<any>{
+  update(cliente: Cliente): Observable<any> {
     /*
     Los parametros son: url, los datos a modificar, en este caso el objeto cliente y finalmente los headers
     */
-    return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente, { headers: this.httpHeaders }).pipe(
       catchError(e => {
-        if(e.status == 400){
+        if (e.status == 400) {
           return throwError(e);
         }
         console.log(e.error.mensaje);
@@ -124,8 +138,8 @@ export class ClienteService {
     );
   }
 
-  delete(id:number): Observable<Cliente>{
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
+  delete(id: number): Observable<Cliente> {
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.httpHeaders }).pipe(
       catchError(e => {
         console.log(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');
