@@ -23,7 +23,7 @@ export class ClientesComponent implements OnInit {
    que se envia como parametro a  una funcion ánonima
    y el varlor de esa variable se asigna a la variable
     clientes de esta clase*/
-          clientes => this.clientes = clientes
+          this.clientes = clientes;
           console.log("Clientes Component");
           clientes.forEach(cliente => {
             console.log(cliente.nombre);
