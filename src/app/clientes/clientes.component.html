@@ -43,6 +43,9 @@
           </tr>
         </tbody>
       </table>
+      <!-- //inyeccion de dependencia de un componente hijo en un componente padre -->
+      <!-- el primero corresponde al atributo en el hijo y el segundo a la varible en el componente padre -->
+      <paginator-nav *ngIf="paginador" [paginador] = "paginador"></paginator-nav>
     </div>
   </div>
 </div>

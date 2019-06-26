@@ -26,46 +26,72 @@ export class ClienteService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getClientes(): Observable<Cliente[]> {
-    /*Con of() se convierte el listado de
-     clientes en un flujo observable apartir
-     de la lista de clientes*/
-    //return of(CLIENTES);
+  // getClientes(): Observable<Cliente[]> {
+  //   /*Con of() se convierte el listado de
+  //    clientes en un flujo observable apartir
+  //    de la lista de clientes*/
+  //   //return of(CLIENTES);
 
-    /*Esto se hace para realizar un cast ya que por
-     defecto el metodo .get devuelve un objeto de
-      tipo any y necesitamos un arreglo de clientes*/
-    // return this.http.get<Cliente[]>(this.urlEndPoint);
+  //   /*Esto se hace para realizar un cast ya que por
+  //    defecto el metodo .get devuelve un objeto de
+  //     tipo any y necesitamos un arreglo de clientes*/
+  //   // return this.http.get<Cliente[]>(this.urlEndPoint);
 
-    /*
-    esto es una segunda forma, funciona igual solo que con otra sintaxis
-    */
-    return this.http.get(this.urlEndPoint).pipe(
-      //tap no cambia los datos sólo permite manipularlos
-      tap(response => {
-        let clientes = response as Cliente[];
-        clientes.forEach(cliente => {
+  //   /*
+  //   esto es una segunda forma, funciona igual solo que con otra sintaxis
+  //   */
+  //   return this.http.get(this.urlEndPoint).pipe(
+  //     //tap no cambia los datos sólo permite manipularlos
+  //     tap(response => {
+  //       let clientes = response as Cliente[];
+  //       clientes.forEach(cliente => {
+  //         console.log(cliente.nombre);
+  //       });
+  //     }),
+  //     map(response => {
+  //       let clientes = response as Cliente[];
+  //       return clientes.map(cliente => {
+  //         cliente.nombre = cliente.nombre.toUpperCase();
+  //         let datePipe = new DatePipe('es');
+  //         // cliente.createAt = formatDate(cliente.createAt, 'dd-MM-yyyy', 'en-US');
+  //         //con 3 E se muestra el nombre del dia abreviado, con 4 Ese muestra completo
+  //         //3 M es el nombre del mes abreviado, con 4 M es el nombre del mes completo
+  //         //cliente.createAt = datePipe.transform(cliente.createAt, 'fullDate'); //revisar documentacion
+  //         //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy'); //esto se deja como pipe en el html
+  //         return cliente;
+  //       }
+  //       )
+  //     }),
+  //     //el orden en que ejecutes estas funciones es importante puesto 
+  //     //que arriba debes convertir a clientes y aqui ya no porque el map ya lo hizo
+  //     tap(clientes => {
+  //       clientes.forEach(cliente => {
+  //         console.log(cliente.nombre);
+  //       });
+  //     })
+  //   );
+  // }
+
+  //metodo para paginacion
+  getClientes(page: number): Observable<any> {
+    return this.http.get(this.urlEndPoint + `/page/${page}`).pipe(
+      tap((response: any) => {
+        console.log("Nombres desde: Servicio 1");
+        response.content.forEach(cliente => {
           console.log(cliente.nombre);
         });
       }),
-      map(response => {
-        let clientes = response as Cliente[];
-        return clientes.map(cliente => {
+      map((response: any) => {
+        (response.content as Cliente[]).map(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase();
           let datePipe = new DatePipe('es');
-          // cliente.createAt = formatDate(cliente.createAt, 'dd-MM-yyyy', 'en-US');
-          //con 3 E se muestra el nombre del dia abreviado, con 4 Ese muestra completo
-          //3 M es el nombre del mes abreviado, con 4 M es el nombre del mes completo
-          //cliente.createAt = datePipe.transform(cliente.createAt, 'fullDate'); //revisar documentacion
-          //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy'); //esto se deja como pipe en el html
           return cliente;
-        }
-        )
+        })
+        return response;
       }),
-      //el orden en que ejecutes estas funciones es importante puesto 
-      //que arriba debes convertir a clientes y aqui ya no porque el map ya lo hizo
-      tap(clientes => {
-        clientes.forEach(cliente => {
+      tap(response => {
+        console.log("Nombres desde: Servicio 2");
+        (response.content as Cliente[]).forEach(cliente => {
           console.log(cliente.nombre);
         });
       })

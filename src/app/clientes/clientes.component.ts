@@ -3,6 +3,7 @@ import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,25 +13,38 @@ import { tap } from 'rxjs/operators';
 export class ClientesComponent implements OnInit {
 
   clientes: Cliente[];
+  paginador: any;
 
-  constructor(private clienteService: ClienteService) { }
+  constructor(private clienteService: ClienteService,
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.clienteService.getClientes()
-      .pipe(
-        tap(clientes => {
-          /*Este seria el observador; una varibale clientes
-   que se envia como parametro a  una funcion ánonima
-   y el varlor de esa variable se asigna a la variable
-    clientes de esta clase*/
-          this.clientes = clientes;
-          console.log("Clientes Component");
-          clientes.forEach(cliente => {
-            console.log(cliente.nombre);
-          });
-        })
-      )
-      .subscribe(/*este metodo (subscribe) es el más importante, si no se pone no se emiten los datos y por ende nada funciona*/);
+    //puesto que se necesita revisar constantemente cuando el parametro cambie se mete en un observable
+    //para asi saber qu cuando cambie se debe volver a llamara al metodo de consulta
+    this.activatedRoute.paramMap.subscribe(params => {
+      let page: number = +params.get('page');
+      if (!page) {
+        page = 0;
+      }
+      this.clienteService.getClientes(page)
+        .pipe(
+          tap(response => {
+            /*Este seria el observador; una varibale clientes
+     que se envia como parametro a  una funcion ánonima
+     y el varlor de esa variable se asigna a la variable
+      clientes de esta clase*/
+            console.log("Clientes Component");
+            (response.content as Cliente[]).forEach(cliente => {
+              console.log(cliente.nombre);
+            });
+          })
+        )
+        /*este metodo (subscribe) es el más importante, si no se pone no se emiten los datos y por ende nada funciona*/
+        .subscribe(response => {
+          this.clientes = (response.content as Cliente[]);
+          this.paginador = response;
+        });
+    });
   }
 
   delete(cliente: Cliente): void {
