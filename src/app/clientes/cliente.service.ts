@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 /* Esto es para angular 6*/
 /*El Observable sirve para realizar las peticiones asincronas y poder usar Reactive*/
 import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 
 
@@ -174,20 +174,27 @@ export class ClienteService {
     );
   }
 
-  subirFoto(archivo: File, id): Observable<Cliente> {
+  subirFoto(archivo: File, id): Observable<HttpEvent<{}>> {
     let formData = new FormData();
     formData.append("archivo", archivo);
     formData.append("id", id);
 
-    return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
-      map((response: any) => {
-        return response.cliente as Cliente
-      }),
-      catchError(e => {
-        console.log(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
-        return throwError(e);
-      })
-    )
+    const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData, {
+      reportProgress: true
+    });
+
+    return this.http.request(req); 
+
+    // Se comenta puesto que se agregala barra de progreso y se maneja de diferente forma
+    // return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
+    //   map((response: any) => {
+    //     return response.cliente as Cliente
+    //   }),
+    //   catchError(e => {
+    //     console.log(e.error.mensaje);
+    //     swal.fire(e.error.mensaje, e.error.error, 'error');
+    //     return throwError(e);
+    //   })
+    // )
   }
 }
