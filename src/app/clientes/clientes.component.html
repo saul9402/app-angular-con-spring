@@ -1,4 +1,4 @@
-<detalle-cliente  *ngIf="clienteSeleccionado" [cliente] = "clienteSeleccionado"></detalle-cliente>
+<detalle-cliente *ngIf="clienteSeleccionado" [cliente]="clienteSeleccionado"></detalle-cliente>
 <div class="card border-primary mb-3">
   <div class="card-header">Clientes</div>
   <div class="card-body text-primary">
@@ -25,7 +25,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let cliente of clientes">
-            <td><button type="button" (click) ="abrirModal(cliente)" class="btn btn-success btn-sm">{{cliente.id}}</button></td>
+            <td><button data-toggle="modal" data-target="#exampleModal" data-keyboard="false" data-backdrop="static"
+                type="button" (click)="abrirModal(cliente)" class="btn btn-success btn-sm">{{cliente.id}}</button></td>
             <td>{{cliente.nombre}}</td>
             <td>{{cliente.apellido | uppercase}} </td>
             <td>{{cliente.email}}</td>
