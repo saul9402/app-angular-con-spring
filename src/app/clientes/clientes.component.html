@@ -24,7 +24,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let cliente of clientes">
-            <td>{{cliente.id}}</td>
+            <td><button type="button" [routerLink]="['/clientes/ver', cliente.id]"
+                class="btn btn-success btn-sm">{{cliente.id}}</button></td>
             <td>{{cliente.nombre}}</td>
             <td>{{cliente.apellido | uppercase}} </td>
             <td>{{cliente.email}}</td>
@@ -45,7 +46,7 @@
       </table>
       <!-- //inyeccion de dependencia de un componente hijo en un componente padre -->
       <!-- el primero corresponde al atributo en el hijo y el segundo a la varible en el componente padre -->
-      <paginator-nav *ngIf="paginador" [paginador] = "paginador"></paginator-nav>
+      <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
     </div>
   </div>
 </div>
