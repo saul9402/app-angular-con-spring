@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
+import { Region } from './Region';
 
 
 
@@ -25,6 +26,10 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({ 'Content-Type': "application/json" })
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  getRegiones(): Observable<Region[]>{
+    return this.http.get<Region[]>(this.urlEndPoint + "/regiones");
+  }
 
   // getClientes(): Observable<Cliente[]> {
   //   /*Con of() se convierte el listado de
