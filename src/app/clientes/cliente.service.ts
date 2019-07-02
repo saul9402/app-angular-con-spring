@@ -27,8 +27,21 @@ export class ClienteService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getRegiones(): Observable<Region[]>{
-    return this.http.get<Region[]>(this.urlEndPoint + "/regiones");
+  private isNoAutorizado(e): boolean {
+    if (e.status == 401 || e.status == 403) {
+      this.router.navigate(['/login'])
+      return true;
+    }
+    return false;
+  }
+
+  getRegiones(): Observable<Region[]> {
+    return this.http.get<Region[]>(this.urlEndPoint + "/regiones").pipe(
+      catchError(e => {
+        this.isNoAutorizado(e);
+        return throwError(e);
+      })
+    );
   }
 
   // getClientes(): Observable<Cliente[]> {
@@ -112,7 +125,9 @@ export class ClienteService {
     */
     return this.http.post<any>(this.urlEndPoint, cliente, { headers: this.httpHeaders }).pipe(
       catchError(e => {
-
+        if (this.isNoAutorizado(e)) {
+          return throwError(e);
+        }
         if (e.status == 400) {
           return throwError(e);
         }
@@ -145,6 +160,9 @@ export class ClienteService {
        busca de errores si se llega a dar alguno lo manda a la variable e
        y apartir de ahi se puede manejar. Con pipe puedes manejar "operadores"*/
       catchError(e => {
+        if (this.isNoAutorizado(e)) {
+          return throwError(e);
+        }
         this.router.navigate(['/clientes']);
         console.log(e.error.mensaje);
         swal.fire('Error al editar', e.error.mensaje, 'error');
@@ -159,6 +177,9 @@ export class ClienteService {
     */
     return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente, { headers: this.httpHeaders }).pipe(
       catchError(e => {
+        if (this.isNoAutorizado(e)) {
+          return throwError(e);
+        }
         if (e.status == 400) {
           return throwError(e);
         }
@@ -172,6 +193,9 @@ export class ClienteService {
   delete(id: number): Observable<Cliente> {
     return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.httpHeaders }).pipe(
       catchError(e => {
+        if (this.isNoAutorizado(e)) {
+          return throwError(e);
+        }
         console.log(e.error.mensaje);
         swal.fire(e.error.mensaje, e.error.error, 'error');
         return throwError(e);
@@ -188,7 +212,12 @@ export class ClienteService {
       reportProgress: true
     });
 
-    return this.http.request(req); 
+    return this.http.request(req).pipe(
+      catchError(e => {
+        this.isNoAutorizado(e);
+        return throwError(e);
+      })
+    );
 
     // Se comenta puesto que se agregala barra de progreso y se maneja de diferente forma
     // return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
