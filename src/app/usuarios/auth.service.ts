@@ -27,7 +27,7 @@ export class AuthService {
     return new Usuario();
   }
 
-  public get token(): String {
+  public get token(): string {
     if (this._token != null) {
       return this._token;
     } else if (this._token == null && sessionStorage.getItem('token') != null) {
@@ -60,7 +60,6 @@ export class AuthService {
   guadarToken(accessToken: string): void {
     this._token = accessToken;
     sessionStorage.setItem('token', this._token);
-
   }
   guadarUsuario(accessToken: string): void {
     let payload = this.obtenerDatosToken(accessToken);
@@ -80,5 +79,13 @@ export class AuthService {
     } else {
       return null;
     }
+  }
+
+  isAuthenticated():boolean{
+    let payload = this.obtenerDatosToken(this.token);
+    if(payload != null && payload.user_name && payload.user_name.length > 0){
+      return true;
+    }
+    return false;
   }
 }
