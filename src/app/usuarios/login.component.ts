@@ -34,6 +34,10 @@ export class LoginComponent implements OnInit {
       let usuario = this.authService.usuario;
       this.router.navigate(['/clientes']);
       swal.fire('Login', `Hola ${usuario.username} has iniciado sesión con éxito`, 'success');
+    }, err => {
+      if (err.status == 400) {
+        swal.fire('Error Login', 'Usuario o clave incorrecta', 'error');
+      }
     });
   }
 
