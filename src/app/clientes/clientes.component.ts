@@ -5,6 +5,7 @@ import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { ModalService } from './detalle/modal.service';
+import { AuthService } from '../usuarios/auth.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class ClientesComponent implements OnInit {
   clienteSeleccionado: Cliente;
 
   constructor(private clienteService: ClienteService,
-    private activatedRoute: ActivatedRoute, private modalService: ModalService) { }
+    private activatedRoute: ActivatedRoute, private authService: AuthService, private modalService: ModalService) { }
 
   ngOnInit() {
     //puesto que se necesita revisar constantemente cuando el parametro cambie se mete en un observable

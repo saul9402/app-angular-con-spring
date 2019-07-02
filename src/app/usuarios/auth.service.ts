@@ -89,6 +89,14 @@ export class AuthService {
     }
     return false;
   }
+
+  hasRole(role: string): boolean {
+    if (this.usuario.roles.includes(role)) {
+      return true;
+    }
+    return false;
+  }
+
   logout() {
     this._token = null;
     this._usuario = null;
@@ -96,4 +104,6 @@ export class AuthService {
     // sessionStorage.removeItem('token');
     // sessionStorage.removeItem('usuario');
   }
+
+
 }
