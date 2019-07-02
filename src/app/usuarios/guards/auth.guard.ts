@@ -16,9 +16,9 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     if (this.authService.isAuthenticated()) {
-      if (this.isTokenExpirado) {
-        this.authService.logout();
+      if (this.isTokenExpirado()) {
         swal.fire("Token Expirado", `Hola ${this.authService.usuario.username} tu sesión ha expirado. Inicia sesión de nuevo`, 'info');
+        this.authService.logout();
         this.router.navigate(['/login']);
         return false;
       }
