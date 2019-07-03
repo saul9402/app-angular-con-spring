@@ -25,6 +25,7 @@ import { LoginComponent } from './usuarios/login.component';
 import { AuthGuard } from './usuarios/guards/auth.guard';
 import { RoleGuard } from './usuarios/guards/role.guard';
 import { TokenInterceptor } from './usuarios/interceptors/token.interceptor';
+import { AuthInterceptor } from './usuarios/interceptors/auth.interceptor.';
 
 
 registerLocaleData(localeES, 'es');
@@ -61,7 +62,8 @@ const routes: Routes = [
     BrowserAnimationsModule
   ],
   providers: [ClienteService, { provide: LOCALE_ID, useValue: 'es' },
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }],
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

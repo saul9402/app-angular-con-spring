@@ -3,7 +3,6 @@ import { formatDate, DatePipe } from '@angular/common'
 
 //import {CLIENTES} from './clientes.json';
 import { Cliente } from './cliente';
-import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 /*import {Observable} from 'rxjs/Observable' esto es para angular 5*/
 /*import { of } from 'rxjs/observable/of' esto es para la version 5*/
@@ -11,10 +10,9 @@ import { Router } from '@angular/router';
 /* Esto es para angular 6*/
 /*El Observable sirve para realizar las peticiones asincronas y poder usar Reactive*/
 import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Region } from './Region';
-import { AuthService } from '../usuarios/auth.service';
 
 
 
@@ -26,7 +24,7 @@ export class ClienteService {
   private urlEndPoint: string = 'http://localhost:8080/api/clientes';
   // private httpHeaders = new HttpHeaders({ 'Content-Type': "application/json" })
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   // private agregarAuthorizationHeader() {
   //   let token = this.authService.token;
@@ -37,30 +35,9 @@ export class ClienteService {
   //   }
   // }
 
-  private isNoAutorizado(e): boolean {
-    if (e.status == 401) {
-      if (this.authService.isAuthenticated()) {
-        this.authService.logout();
-      }
-      this.router.navigate(['/login']);
-      return true;
-    }
-    if (e.status == 403) {
-      swal.fire("Acceso Denegado", `Hola ${this.authService.usuario.username} no tienes accesos a este recurso`, 'warning');
-      this.router.navigate(['/clientes']);
-      return true;
-    }
-    return false;
-  }
-
   getRegiones(): Observable<Region[]> {
     // return this.http.get<Region[]>(this.urlEndPoint + "/regiones", { headers: this.agregarAuthorizationHeader() }).pipe(
-    return this.http.get<Region[]>(this.urlEndPoint + "/regiones").pipe(
-      catchError(e => {
-        this.isNoAutorizado(e);
-        return throwError(e);
-      })
-    );
+    return this.http.get<Region[]>(this.urlEndPoint + "/regiones");
   }
 
   // getClientes(): Observable<Cliente[]> {
@@ -145,15 +122,10 @@ export class ClienteService {
     // return this.http.post<any>(this.urlEndPoint, cliente, { headers: this.agregarAuthorizationHeader() }).pipe(
     return this.http.post<any>(this.urlEndPoint, cliente).pipe(
       catchError(e => {
-        if (this.isNoAutorizado(e)) {
-          return throwError(e);
-        }
         if (e.status == 400) {
           return throwError(e);
         }
-
         console.log(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
         return throwError(e);
       })
     );
@@ -168,8 +140,9 @@ export class ClienteService {
     return this.http.post<Cliente>(this.urlEndPoint, cliente).pipe(
       map((response: any) => response.cliente as Cliente),
       catchError(e => {
-        console.log(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
+        if (e.error.mensaje) {
+          console.log(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
@@ -182,12 +155,10 @@ export class ClienteService {
        busca de errores si se llega a dar alguno lo manda a la variable e
        y apartir de ahi se puede manejar. Con pipe puedes manejar "operadores"*/
       catchError(e => {
-        if (this.isNoAutorizado(e)) {
-          return throwError(e);
+        if (e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/clientes']);
+          console.log(e.error.mensaje);
         }
-        this.router.navigate(['/clientes']);
-        console.log(e.error.mensaje);
-        swal.fire('Error al editar', e.error.mensaje, 'error');
         return throwError(e);
       })
     )
@@ -200,14 +171,12 @@ export class ClienteService {
     // return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente, { headers: this.agregarAuthorizationHeader() }).pipe(
     return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente).pipe(
       catchError(e => {
-        if (this.isNoAutorizado(e)) {
-          return throwError(e);
-        }
         if (e.status == 400) {
           return throwError(e);
         }
-        console.log(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
+        if (e.error.mensaje) {
+          console.log(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
@@ -217,11 +186,9 @@ export class ClienteService {
     // return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, { headers: this.agregarAuthorizationHeader() }).pipe(
     return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        if (this.isNoAutorizado(e)) {
-          return throwError(e);
+        if (e.error.mensaje) {
+          console.log(e.error.mensaje);
         }
-        console.log(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
         return throwError(e);
       })
     );
@@ -243,12 +210,7 @@ export class ClienteService {
       // headers: httpHeaders
     });
 
-    return this.http.request(req).pipe(
-      catchError(e => {
-        this.isNoAutorizado(e);
-        return throwError(e);
-      })
-    );
+    return this.http.request(req);
 
     // Se comenta puesto que se agregala barra de progreso y se maneja de diferente forma
     // return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
