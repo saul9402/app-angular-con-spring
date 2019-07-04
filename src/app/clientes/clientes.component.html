@@ -22,6 +22,7 @@
             <th>APELLIDO</th>
             <th>EMAIL</th>
             <th>FECHA</th>
+            <th>CREAR FACTURA</th>
             <th *ngIf="authService.hasRole('ROLE_ADMIN')">EDITAR</th>
             <th *ngIf="authService.hasRole('ROLE_ADMIN')">ELIMINAR</th>
           </tr>
@@ -32,7 +33,7 @@
                 src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" alt="{{cliente.foto}}"
                 class="img-fluid rounded" data-toggle="modal" data-target="#exampleModal" data-keyboard="false"
                 data-backdrop="static" style="width: 64px; cursor: pointer;"> -->
-            <td> <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto"
+            <td class="text-center"> <img (click)="abrirModal(cliente)" *ngIf="cliente?.foto"
                 src="http://localhost:8080/api/uploads/img/{{cliente.foto}}" alt="{{cliente.foto}}"
                 class="img-fluid rounded" data-toggle="modal" data-target="#exampleModal" data-keyboard="false"
                 data-backdrop="static" style="width: 64px; cursor: pointer;">
@@ -44,6 +45,10 @@
             <td>{{cliente.apellido | uppercase}} </td>
             <td>{{cliente.email}}</td>
             <td>{{cliente.createAt | date:'fullDate'}}</td>
+            <td class="text-center p-4">
+              <button type="button" name="crearFactura" [routerLink]="['/facturas/form', cliente.id]"
+                class="btn btn-success btn-sm">crear factura</button>
+            </td>
             <td *ngIf="authService.hasRole('ROLE_ADMIN')">
               <!-- Para recibir parametros por medio de la url se pone la url que los recibirá
                 dentro de el arreglo de routerLink (previamente esta url deberá estar mapeada en el app.module

@@ -45,6 +45,10 @@
                   alt="{{cliente.foto}}" class="img-fluid rounded">
               </div>
             </div>
+            <div class="row no-gutters mt-4">
+              <button type="button" name="crearFactura" [routerLink]="['/facturas/form', cliente.id]"
+                class="btn btn-success btn-sm">crear factura</button>
+            </div>
             <div class="row">
               <div *ngIf="cliente.facturas.length == 0" class="alert alert-info info my-4">
                 No hay facturas asignadas para el cliente {{cliente.nombre}} {{cliente.apellido}}
