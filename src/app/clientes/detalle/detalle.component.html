@@ -1,6 +1,6 @@
 <div *ngIf="modalService.modal" class="abrir-modal animacion fadeIn">
-  <div class="modal d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+  <div class="modal d-block mb-4" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{titulo}}</h5>
@@ -43,6 +43,31 @@
               <div class="col-sm">
                 <img *ngIf="cliente?.foto" src="http://localhost:8080/api/uploads/img/{{cliente.foto}}"
                   alt="{{cliente.foto}}" class="img-fluid rounded">
+              </div>
+            </div>
+            <div class="row">
+              <div *ngIf="cliente.facturas.length == 0" class="alert alert-info info my-4">
+                No hay facturas asignadas para el cliente {{cliente.nombre}} {{cliente.apellido}}
+              </div>
+              <div class="table-responsive" *ngIf="cliente.facturas.length > 0">
+                <table class="table table-bordered table-striped my-4">
+                  <thead>
+                    <tr>
+                      <th>Folio</th>
+                      <th>Fecha</th>
+                      <th>Descripción</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let factura of cliente.facturas">
+                      <td>{{factura.id}}</td>
+                      <td>{{factura.createAt}}</td>
+                      <td>{{factura.descripcion}}</td>
+                      <td>{{factura.total}}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

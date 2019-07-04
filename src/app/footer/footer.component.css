@@ -4,3 +4,7 @@
   height: 60px;
   width: 100%;
 }
+
+.fixed-bottom{
+  z-index: 600;
+}
