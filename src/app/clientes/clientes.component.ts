@@ -19,7 +19,9 @@ export class ClientesComponent implements OnInit {
   clienteSeleccionado: Cliente;
 
   constructor(private clienteService: ClienteService,
-    private activatedRoute: ActivatedRoute, private authService: AuthService, private modalService: ModalService) { }
+    private activatedRoute: ActivatedRoute,
+    public authService: AuthService,
+    public modalService: ModalService) { }
 
   ngOnInit() {
     //puesto que se necesita revisar constantemente cuando el parametro cambie se mete en un observable
