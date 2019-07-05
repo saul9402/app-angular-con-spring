@@ -14,8 +14,8 @@ export class FormComponent implements OnInit {
 
   public cliente: Cliente = new Cliente();
   regiones: Region[];
-  private titulo: string = "Crear Cliente";
-  private errores: string[];
+  public titulo: string = "Crear Cliente";
+  public errores: string[];
 
   constructor(private clienteService: ClienteService, private router: Router,
     private activatedRoute: ActivatedRoute) { }
