@@ -12,7 +12,8 @@ export class DetalleFacturaComponent implements OnInit {
   factura: Factura;
   titulo: string = 'Factura';
 
-  constructor(private facturaService: FacturaService, private activatedRoute: ActivatedRoute) { }
+  constructor(private facturaService: FacturaService,
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -23,5 +24,4 @@ export class DetalleFacturaComponent implements OnInit {
       })
     })
   }
-
 }
