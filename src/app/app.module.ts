@@ -42,8 +42,8 @@ const routes: Routes = [
   { path: 'clientes/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: { role: 'ROLE_ADMIN' } },
   { path: 'clientes/form/:id', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: { role: 'ROLE_ADMIN' } },
   { path: 'login', component: LoginComponent },
-  { path: 'facturas/:id', component: DetalleFacturaComponent },
-  { path: 'facturas/form/:clienteId', component: FacturasComponent }
+  { path: 'facturas/:id', component: DetalleFacturaComponent, canActivate: [AuthGuard, RoleGuard], data: { role: 'ROLE_USER' } },
+  { path: 'facturas/form/:clienteId', component: FacturasComponent, canActivate: [AuthGuard, RoleGuard], data: { role: 'ROLE_ADMIN' } }
 ]
 
 @NgModule({
@@ -68,8 +68,8 @@ const routes: Routes = [
     MatDatepickerModule,
     // MatNativeDateModule,
     MatMomentDateModule,
-    BrowserAnimationsModule, MatDatepickerModule,MatMomentDateModule,
-     MatAutocompleteModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule
+    BrowserAnimationsModule, MatDatepickerModule, MatMomentDateModule,
+    MatAutocompleteModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule
   ],
   providers: [ClienteService, { provide: LOCALE_ID, useValue: 'es' },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
